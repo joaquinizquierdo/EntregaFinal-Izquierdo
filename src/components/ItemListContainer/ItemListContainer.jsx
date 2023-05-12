@@ -2,11 +2,15 @@ import styled from "styled-components";
 import { colors } from "../../theme";
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { getProducts, getProductsByCategory } from '../../asyncMock';
+
+import { getDocs, collection, query, where } from "firebase/firestore";
+import db from "../../config/firebase";
+
 import Categories from "../Categories/Categories";
 import ItemList from "../ItemList/ItemList";
+import Loading from "../Loading/Loading";
 
-const Div =styled.div`
+const Div = styled.div`
   width: 100%;
   min-height: calc(100vh - (100px + 60px));//100px = header y 60px = footer
   display: flex;
@@ -35,19 +39,26 @@ const H2 = styled.h2`
   border-radius: 5px;
 `;
 
-const ItemListContainer = ({greeting}) => {
+const ItemListContainer = ({ greeting }) => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const {categoryId} = useParams()
+  const { categoryId } = useParams()
 
   useEffect(() => {
     const fetching = async () => {
-      const asynFunc = categoryId ? getProductsByCategory : getProducts;
+      const collectionRef = categoryId ? query(collection(db, 'products'), where('category', '==', categoryId)) : collection(db, 'products');
+      const productsFromDb = await getDocs(collectionRef);
       try {
-        setProducts(await asynFunc(categoryId));
+        const productsAdapted = productsFromDb.docs.map(doc => {
+          const data = doc.data();
+          return { id: doc.id, ...data };
+        });
+        setProducts(productsAdapted);
       } catch (err) {
-        console.log(err);
+        console.error(err);
       };
+      setLoading(false);
     };
     fetching();
   }, [categoryId]);
@@ -57,18 +68,18 @@ const ItemListContainer = ({greeting}) => {
       <DivCategories>
         <H2>Filtrar</H2>
         <Link to={`/products/category/remeras`}>
-          <Categories content={'Remeras'}/>
+          <Categories content={'Remeras'} />
         </Link>
         <Link to={`/products/category/buzos`}>
-          <Categories content={'Buzos'}/>
+          <Categories content={'Buzos'} />
         </Link>
         <Link to={`/products/category/zapatillas`}>
-          <Categories content={'Zapatillas'}/>
+          <Categories content={'Zapatillas'} />
         </Link>
       </DivCategories>
       <DivProducts>
         <h1>{greeting}</h1>
-        <ItemList products={products}/>
+        {loading ? <Loading /> : <ItemList products={products} />}
       </DivProducts>
     </Div>
   );

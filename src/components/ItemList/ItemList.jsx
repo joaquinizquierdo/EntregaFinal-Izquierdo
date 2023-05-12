@@ -9,10 +9,10 @@ const Div = styled.div`
   justify-content: center;
 `;
 
-const ItemList = ({products}) => {
+const ItemList = ({ products }) => {
   return (
     <Div>
-      {products.map(prod => <Item {...prod}/>)}
+      {products.map(prod => <Item key={prod.id} {...prod} />)}
     </Div>
   );
 };

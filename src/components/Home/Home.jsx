@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import banner from "./assets/banner.jpg";
 
 const Aviso = styled.p`
   text-align: center;
@@ -7,11 +8,15 @@ const Aviso = styled.p`
   font-family: 'Oswald', sans-serif;
 `;
 
+const BannerImg = styled.img`
+  width: 100%;
+`;
+
 const Home = (props) => {
   return (
     <>
       <Aviso>{props.aviso}</Aviso>
-      <p>Home</p>
+      <BannerImg src={banner} alt={banner} />
     </>
   );
 };

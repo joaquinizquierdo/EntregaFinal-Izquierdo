@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import logo from "./assets/logo.png"
+import logo from "./assets/logo.png";
 import NavButton from "../NavButton/NavButton";
 import CartWidget from "../CartWidget/CartWidget";
 
@@ -46,20 +46,20 @@ const NavBar = () => {
   return (
     <>
       <Header>
-        <Img src={logo} alt={logo}/>
+        <Img src={logo} alt={logo} />
         <H1>USC</H1>
       </Header>
       <Nav>
         <DivShop>
           <div>
             <Link to={`/`}>
-              <NavButton content={'Inicio'}/>
+              <NavButton content={'Inicio'} />
             </Link>
             <Link to={`/products`}>
-              <NavButton content={'Productos'}/>
+              <NavButton content={'Productos'} />
             </Link>
           </div>
-          <CartWidget/>
+          <CartWidget />
         </DivShop>
       </Nav>
     </>

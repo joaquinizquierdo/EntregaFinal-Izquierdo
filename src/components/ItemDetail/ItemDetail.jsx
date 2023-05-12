@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { colors } from "../../theme";
+import { useContext } from "react";
+import { CartContext } from "../../context/CartContext";
 import ItemCount from "../ItemCount/ItemCount";
 
 const Article = styled.article`
@@ -12,13 +14,15 @@ const DivContainer = styled.div`
   width: 50em;
   display: flex;
   flex-direction: row;
+  box-shadow: 10px 10px 5px grey;
 `;
 
 const DivImg = styled.div`
   width: 30em;
   height: 30em;
 `;
-const Img =  styled.img`
+
+const Img = styled.img`
   width: 30em;
   height: 30em;
 `;
@@ -37,6 +41,9 @@ const DivData = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  h3{
+    font-weight: 400;
+  };
 `;
 
 const H2name = styled.h2`
@@ -46,19 +53,26 @@ const H2name = styled.h2`
   border-bottom: 3px solid ${colors.color};
 `;
 
-const ItemDetail = ({name, price, img, stock}) => {
+const ItemDetail = ({ id, name, price, img, stock, desc }) => {
+  const { addToCart } = useContext(CartContext);
+
+  const handleOnAdd = (quantityToAdd) => {
+    addToCart(id, name, price, quantityToAdd, img);
+  };
+
   return (
     <Article>
       <DivContainer>
         <DivImg>
-          <Img src={img} alt={img}/>
+          <Img src={img} alt={img} />
         </DivImg>
         <DivShop>
           <DivData>
             <H2name>{name}</H2name>
-            <h2>${price}</h2>
+            <h3>${price}</h3>
+            <h3>{desc}</h3>
           </DivData>
-          <ItemCount stock={stock} initial={1} onAdd={(cantidad) => console.log('Se agregaron ', cantidad, ' productos')}/>
+          <ItemCount stock={stock} initial={1} onAdd={handleOnAdd} />
         </DivShop>
       </DivContainer>
     </Article>
@@ -66,3 +80,5 @@ const ItemDetail = ({name, price, img, stock}) => {
 };
 
 export default ItemDetail;
+
+//<ItemCount stock={stock} initial={1} onAdd={handleOnAdd}/>
